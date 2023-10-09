@@ -1,6 +1,7 @@
 package com.XAUS.Repositories;
 import com.XAUS.DTOS.OrderProductConvertResponseDTO;
 import com.XAUS.DTOS.OrdersConvertResponseDTO;
+import com.XAUS.DTOS.ProductsReportsReponseDTO;
 import com.XAUS.Models.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
             "WHERE (:param_type = 'user' AND o.user_id = :id) OR (:param_type = 'client' AND o.client_id = :id)"+
             "OR (:param_type = 'order' AND o.id = :id)", nativeQuery = true)
     public List<OrdersConvertResponseDTO> findBySomething(@Param("id") Long id, @Param("param_type") String paramType);
+
+
+    @Query(value = "SELECT products->>'productName' as productName,SUM(CAST(products->>'buyedQuantity' AS integer)) as quantity FROM ( SELECT jsonb_array_elements(products) as products FROM orders ) as subquery GROUP BY productName", nativeQuery = true)
+    public List<ProductsReportsReponseDTO> getProductsReport();
+
 
 
 }

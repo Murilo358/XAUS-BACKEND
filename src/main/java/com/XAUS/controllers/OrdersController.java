@@ -4,6 +4,7 @@ import com.XAUS.DTOS.OrderRequestDTO;
 import java.util.List;
 
 import com.XAUS.DTOS.OrdersResponseDTO;
+import com.XAUS.DTOS.ProductsReportsReponseDTO;
 import com.XAUS.Models.Orders;
 import com.XAUS.Services.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,11 @@ public class OrdersController {
     public ResponseEntity setOrderPayed(@PathVariable Long orderId){
 
         return ordersService.setOrderPayed(orderId);
+    }
+
+    @GetMapping("productsReport")
+    public List<ProductsReportsReponseDTO> getProductsReport(){
+        return ordersService.getProductsReport();
     }
 
 

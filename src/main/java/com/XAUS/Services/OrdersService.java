@@ -189,6 +189,9 @@ public class OrdersService {
         return orders;
 
     }
+    public List<ProductsReportsReponseDTO> getProductsReport (){
+        return this.repository.getProductsReport();
+    }
 
     public ResponseEntity setOrderPayed(Long orderId){
 
