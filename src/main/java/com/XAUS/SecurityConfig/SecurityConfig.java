@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(new RegexRequestMatcher("/products(.*)", "GET")).hasRole( "SALES")
                         .requestMatchers(new RegexRequestMatcher("/orders(.*)", "POST")).hasRole( "SALES")
                         .requestMatchers(new RegexRequestMatcher("/clients(.*)", "POST")).hasRole( "SALES")
+                        .requestMatchers(new RegexRequestMatcher("/clients(.*)", "DELETE")).hasRole( "ADMIN")
                         .anyRequest().authenticated()
                 ) //Adicionar um filtro antes da verificação do UsernamePasswordAuthenticationFilter, (tratar o token e validar se está autenticado)
                 .addFilterBefore(securityFilter , UsernamePasswordAuthenticationFilter.class)

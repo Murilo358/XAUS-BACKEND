@@ -80,14 +80,16 @@ public class ClientsService {
 
     public ResponseEntity updateClient (Long id, @RequestBody ClientsRequestDTO newData){
 
-        if(newData.cpf() == null || newData.email() == null){
-            throw new CustomException("O email ou o cpf não pode ser vázio", HttpStatus.BAD_GATEWAY);
+        if( newData.email() == null || newData.name() == null){
+            throw new CustomException("O email ou o nome não pode ser vázio", HttpStatus.BAD_GATEWAY);
         }
 
+        if(id == 1){
+            throw new CustomException("Esse cliente não pode ser alterado", HttpStatus.BAD_GATEWAY);
+        }
 
         Clients client = this.findById(id);
 
-        client.setCpf(newData.cpf());
         client.setEmail(newData.email());
         client.setName(newData.name());
         repository.save(client);
@@ -98,5 +100,18 @@ public class ClientsService {
         return this.repository.findAll();
     }
 
+
+    public ResponseEntity deleteClient(Long id){
+
+        if(id == 1){
+            throw new CustomException("Esse cliente não pode ser deletado", HttpStatus.BAD_GATEWAY);
+        }
+
+        //Just checking if its not null
+        this.findById(id);
+
+        repository.deleteById(id);
+        return  ResponseEntity.ok().build();
+    }
 
 }

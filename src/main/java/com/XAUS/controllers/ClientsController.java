@@ -37,11 +37,18 @@ public class ClientsController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity updateClient(@PathVariable Long id, @RequestBody ClientsRequestDTO newData){
+
         return this.clientsService.updateClient(id, newData);
     }
 
     @GetMapping("/getall")
     public List<Clients> getAllClients(){
         return this.clientsService.getAll();
+    }
+
+    @DeleteMapping("/delete/{clientId}")
+    public ResponseEntity deleteProduct(@PathVariable Long clientId){
+
+        return this.clientsService.deleteClient(clientId);
     }
 }
