@@ -1,5 +1,6 @@
 package com.XAUS.DTOS;
 
+import java.util.Date;
 import java.util.List;
 
 public class OrdersResponseDTO {
@@ -14,6 +15,19 @@ public class OrdersResponseDTO {
     private Boolean ItsPayed;
     private Float OrderPrice;
 
+    private Long paymentMethodId;
+
+    private String paymentMethod;
+
+    private Date CreatedAt;
+
+    public Date getCreatedAt() {
+        return CreatedAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        CreatedAt = createdAt;
+    }
 
     public Long getId() {
         return Id;
@@ -85,5 +99,21 @@ public class OrdersResponseDTO {
 
     public void setOrderPrice(Float orderPrice) {
         OrderPrice = orderPrice;
+    }
+
+    public Long getPaymentMethodId() {
+        return paymentMethodId;
+    }
+
+    public void setPaymentMethodId(Long paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

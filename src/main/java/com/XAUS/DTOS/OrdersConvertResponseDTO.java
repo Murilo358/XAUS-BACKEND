@@ -1,5 +1,6 @@
 package com.XAUS.DTOS;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrdersConvertResponseDTO {
@@ -13,6 +14,12 @@ public interface OrdersConvertResponseDTO {
     String getClientCpf();
     Boolean getItsPayed();
     Float getOrderPrice();
+
+    Long getPaymentMethodId();
+
+    String getPaymentMethod();
+
+    Date getCreatedAt();
 }
 
 

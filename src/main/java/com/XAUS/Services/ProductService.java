@@ -27,6 +27,11 @@ public class ProductService {
 
     public Product saveProduct(@RequestBody ProductRequestDTO data) {
 
+        if(data.name() == null || data.description() == null || data.price()  == null || data.quantity() == null){
+
+            throw new CustomException("Nenhum campo pode ser vázio", HttpStatus.BAD_GATEWAY);
+        }
+
         Product productData = new Product(data);
         return repository.save(productData);
 
@@ -54,7 +59,7 @@ public class ProductService {
 
         Product product = this.findById(id);
 
-        product.setQuantity(newData.quantity());
+
         product.setName(newData.name());
         product.setDescription(newData.description());
         product.setPrice(newData.price());

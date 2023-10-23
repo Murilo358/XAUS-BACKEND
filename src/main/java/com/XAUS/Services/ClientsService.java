@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.apache.commons.validator.routines.EmailValidator;
+
 
 import java.util.List;
+
 
 @Service
 public class ClientsService {
@@ -25,6 +28,24 @@ public class ClientsService {
         }
     }
 
+    public void validateCpf(String cpf){
+        if(!cpf.matches("[0-9]{3}\\.?[0-9]{3}\\.?[0-9]{3}\\-?[0-9]{2}")){
+            throw new CustomException("CPF inválido!", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+    }
+
+    public void validateEmail(String email){
+        
+        boolean valid = EmailValidator.getInstance().isValid(email);
+
+        if(!valid){
+            throw new CustomException("Email inválido!", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+    }
+
+
 
     public void checkAlreadyExists(String cpf, String email){
         Clients alreadyAddedCPF = repository.findbyCPF(cpf);
@@ -33,10 +54,10 @@ public class ClientsService {
         if(cpf == null || email == null){
             throw new CustomException("O email ou o cpf não pode ser null", HttpStatus.BAD_GATEWAY);
         }
-        if(alreadyAddedCPF != null  ){
+        else if(alreadyAddedCPF != null  ){
             throw new CustomException("CPF já cadastrado", HttpStatus.BAD_GATEWAY);
         }
-        if(alreadyAddedEmail != null){
+        else if(alreadyAddedEmail != null){
             throw new CustomException("Email já cadastrado", HttpStatus.BAD_GATEWAY);
         }
 
@@ -46,6 +67,10 @@ public class ClientsService {
     public Clients newClient(@RequestBody ClientsRequestDTO data) {
 
        this.checkAlreadyExists(data.cpf(), data.email());
+
+        validateCpf(data.cpf());
+
+        validateEmail(data.email());
 
         Clients clientData = new Clients(data);
         return repository.save(clientData);
@@ -107,7 +132,7 @@ public class ClientsService {
             throw new CustomException("Esse cliente não pode ser deletado", HttpStatus.BAD_GATEWAY);
         }
 
-        //Just checking if its not null
+        //Just checking if isn't null
         this.findById(id);
 
         repository.deleteById(id);

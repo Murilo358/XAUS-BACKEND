@@ -109,7 +109,7 @@ public class OrdersService {
         }
 
 
-            Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false  );
+            Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod()  );
 
         return repository.save(newOrder);
     }
@@ -151,6 +151,9 @@ public class OrdersService {
                     dto.setOrderPrice(order.getOrderPrice());
                     dto.setClientCpf(order.getClientCpf());
                     dto.setId(order.getId());
+                    dto.setPaymentMethodId(order.getPaymentMethodId());
+                    dto.setPaymentMethod(order.getPaymentMethod());
+                    dto.setCreatedAt(order.getCreatedAt());
 
                     List<OrderProductDTO> productDTOs = repository.findProductsBySomething(order.getId()).stream()
                             .map(product -> {
@@ -175,6 +178,7 @@ public class OrdersService {
 
         List<OrdersConvertResponseDTO> orders = repository.findBySomething(id, "client");
 
+
         if (orders.isEmpty()){
             throw new CustomException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
         }
@@ -183,10 +187,15 @@ public class OrdersService {
 
     }
 
-    public List<Orders> getAllOrders(){
-        List<Orders> orders = repository.findAll();
+    public List<OrdersResponseDTO> getAllOrders(){
 
-        return orders;
+        List<OrdersConvertResponseDTO> orders = repository.findBySomething(1L, "nothing");
+
+        if (orders.isEmpty()){
+            throw new CustomException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
+        }
+
+        return this.prepareData(orders);
 
     }
     public List<ProductsReportsReponseDTO> getProductsReport (){

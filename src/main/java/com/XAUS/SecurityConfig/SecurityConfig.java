@@ -45,7 +45,6 @@ public class SecurityConfig {
                         .requestMatchers(new RegexRequestMatcher("/products(.*)", "POST")).hasRole("ADMIN")
                         .requestMatchers(new RegexRequestMatcher("/products(.*)", "PUT")).hasRole( "ADMIN")
                         .requestMatchers(new RegexRequestMatcher("/products(.*)", "DELETE")).hasRole( "ADMIN")
-                        .requestMatchers(new RegexRequestMatcher("/products(.*)", "GET")).hasRole( "SALES")
                         .requestMatchers(new RegexRequestMatcher("/orders(.*)", "POST")).hasRole( "SALES")
                         .requestMatchers(new RegexRequestMatcher("/clients(.*)", "POST")).hasRole( "SALES")
                         .requestMatchers(new RegexRequestMatcher("/clients(.*)", "DELETE")).hasRole( "ADMIN")

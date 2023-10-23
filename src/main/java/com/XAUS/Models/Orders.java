@@ -9,10 +9,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "orders")
@@ -53,7 +55,16 @@ public class Orders {
     @Column(name = "itsPayed")
     private  Boolean itsPayed;
 
-    public Orders(Long userId, String userName, Long clientId, String clientCpf, String clientName, JsonNode products, Float orderPrice, Boolean itsPayed) {
+
+    @Column(name= "paymentMethod")
+    @JoinColumn(name = "id", referencedColumnName = "paymentMethod")
+    private Long paymentMethod;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Date createdAt;
+
+    public Orders(Long userId, String userName, Long clientId, String clientCpf, String clientName, JsonNode products, Float orderPrice, Boolean itsPayed, Long paymentMethod) {
         this.userId = userId;
         this.userName = userName;
         this.clientId = clientId;
@@ -62,6 +73,7 @@ public class Orders {
         this.products = products;
         this.orderPrice = orderPrice;
         this.itsPayed = itsPayed;
+        this.paymentMethod = paymentMethod;
     }
 
     public void setId(Long id) {
@@ -136,4 +148,19 @@ public class Orders {
         return itsPayed;
     }
 
+    public Long getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Long paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }

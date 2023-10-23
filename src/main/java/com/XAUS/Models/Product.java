@@ -1,6 +1,7 @@
 package com.XAUS.Models;
 
 import com.XAUS.DTOS.ProductRequestDTO;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,16 +23,16 @@ public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     @Column(name = "name")
     private String name;
-
+    @NotNull
     @Column(name = "description")
     private String description;
-
+    @NotNull
     @Column(name = "price")
     private Float price;
-
+    @NotNull
     @Column(name = "quantity")
     private Integer quantity;
 

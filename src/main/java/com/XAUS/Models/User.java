@@ -5,6 +5,7 @@ import com.XAUS.DTOS.UserRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,10 @@ public class User implements UserDetails {
 
     @Column(name= "role")
     private UserRole role;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Date createdAt;
 
     public User(UserRequestDTO data) {
         this.name = data.name();

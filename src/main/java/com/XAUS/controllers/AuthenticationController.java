@@ -119,7 +119,7 @@ public class AuthenticationController {
                 return ResponseEntity.badRequest().build();
             }
             else{
-                return ResponseEntity.ok(new ValidateTokenDTO(user.getAuthorities(), user.getName()));
+                return ResponseEntity.ok(new ValidateTokenDTO(user.getAuthorities(), user.getName(), user.getId()  ) );
             }
         }
 
