@@ -62,9 +62,9 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app/**")); //When front end its deployed change this url <---
+        configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app")); //When front end its deployed change this url <---
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type", "Referer","Sec-Ch-Ua","Sec-Ch-Ua-Mobile", "Sec-Ch-Ua-Platform", "User-Agent" ));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
