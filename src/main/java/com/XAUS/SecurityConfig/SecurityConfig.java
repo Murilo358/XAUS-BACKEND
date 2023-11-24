@@ -35,7 +35,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
                 .csrf(csrf-> csrf.disable())
-                .cors(Customizer.withDefaults()) //when default uses a bean by the name of CorsConfigurationSource
+                .cors((cors) -> cors
+                        .configurationSource(myWebsiteConfigurationSource())
+                )//when default uses a bean by the name of CorsConfigurationSource
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize-> authorize
                         .requestMatchers(new RegexRequestMatcher("(.*)/auth/login", "POST")).permitAll()
@@ -60,9 +62,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
+    CorsConfigurationSource myWebsiteConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app/", "http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type", "Referer","Access-Control-Allow-Origin", "User-Agent" ));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
