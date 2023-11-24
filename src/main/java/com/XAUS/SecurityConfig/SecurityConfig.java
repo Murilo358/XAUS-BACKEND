@@ -66,7 +66,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app/", "http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type", "Referer","Access-Control-Allow-Origin", "User-Agent" ));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
