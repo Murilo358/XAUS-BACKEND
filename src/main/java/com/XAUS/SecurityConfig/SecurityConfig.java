@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource myWebsiteConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app/", "http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("https://xaus-front.vercel.app/", "http://localhost:5173", "silly-capybara-b25fe8.netlify.app", "https://main--silly-capybara-b25fe8.netlify.app", "main--silly-capybara-b25fe8.netlify.app"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
