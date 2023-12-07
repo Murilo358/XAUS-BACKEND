@@ -41,21 +41,21 @@ public class AuthenticationController {
 
 //
 //    {
-//        "email": "testeJWT@gmail.com",
+//        "email": "testeXAUS@gmail.com",
 //            "password": "123456"
 //    }
 
     //=-==-=-=-Usuário de teste (SALES) -=-=-=-
 
 //    {
-//        "email": "testeJWTSALES@gmail.com",
+//        "email": "testeXAUSALES@gmail.com",
 //            "password": "123456"
 //    }
 
     //=-==-=-=-Usuário de teste (PACKAGER) -=-=-=-
 
 //    {
-//        "email": "testeJWTPACKAGERS@gmail.com",
+//        "email": "testeXAUSPACKAGER@gmail.com",
 //            "password": "123456"
 //    }
 
