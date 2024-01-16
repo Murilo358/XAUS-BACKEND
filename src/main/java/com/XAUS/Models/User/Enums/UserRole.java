@@ -1,4 +1,4 @@
-package com.XAUS.Models.User;
+package com.XAUS.Models.User.Enums;
 
 public enum UserRole {
     ADMIN("admin"),

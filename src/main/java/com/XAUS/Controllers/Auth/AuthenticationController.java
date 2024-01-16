@@ -6,7 +6,7 @@ import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.DTOS.Auth.ValidateTokenDTO;
 import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.User.User;
-import com.XAUS.Models.User.UserRole;
+import com.XAUS.Models.User.Enums.UserRole;
 import com.XAUS.Repositories.User.UserRepository;
 import com.XAUS.SecurityConfig.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;

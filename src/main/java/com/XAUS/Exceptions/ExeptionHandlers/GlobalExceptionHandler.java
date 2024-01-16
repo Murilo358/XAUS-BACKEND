@@ -14,17 +14,14 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<Object> handleProductNotFound(CustomException message) {
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("message", message.getMessage());
-        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> handleNotFoundException(CustomException message) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message.getMessage());
     }
 
     @ExceptionHandler(OutOfStockException.class)
-    public ResponseEntity<Object> handleProductNotFound(OutOfStockException message) {
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("message", message.getMessage());
-        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleOutOfStockException(OutOfStockException message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message.getMessage());
     }
 
 

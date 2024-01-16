@@ -2,9 +2,8 @@ package com.XAUS.Models.User;
 
 
 import com.XAUS.DTOS.Users.UserRequestDTO;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.XAUS.Models.User.Enums.UserRole;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Getter
+@Setter
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,61 +58,19 @@ public class User implements UserDetails {
         this.role = data.role();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN){
+        switch(this.role){
+
+        case ADMIN:
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_PACKAGER"),new SimpleGrantedAuthority("ROLE_SALES") );
+
+            case SALES:
+            return  List.of(new SimpleGrantedAuthority("ROLE_SALES"), new SimpleGrantedAuthority("ROLE_PACKAGER"));
+
+            default: return List.of(new SimpleGrantedAuthority("ROLE_PACKAGER"));
         }
-        else if(this.role == UserRole.SALES){
-            return List.of(new SimpleGrantedAuthority("ROLE_SALES"), new SimpleGrantedAuthority("ROLE_PACKAGER"));
-        }
 
-        else return List.of(new SimpleGrantedAuthority("ROLE_PACKAGER"));
-
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
@@ -139,15 +98,5 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
 }

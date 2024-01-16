@@ -1,15 +1,16 @@
 package com.XAUS.Models.Payment;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(name = "payment_methods")
 @Entity(name = "payment_methods")
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Getter
+@Setter
 public class PaymentMethods {
 
     @Id
@@ -19,24 +20,4 @@ public class PaymentMethods {
     @Column(name = "paymentMethod")
     private String paymentMethod;
 
-    public PaymentMethods(Long id, String paymentMethod) {
-        this.id = id;
-        this.paymentMethod = paymentMethod;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
 }
