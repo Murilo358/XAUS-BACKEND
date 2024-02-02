@@ -6,23 +6,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<String> handleNotFoundException(CustomException message) {
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message.getMessage());
+    public ResponseEntity<Object> handleCustomException(CustomException message) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", message.getMessage());
+        return new ResponseEntity<>(responseBody, message.httpStatus);
     }
 
     @ExceptionHandler(OutOfStockException.class)
-    public ResponseEntity<Object> handleOutOfStockException(OutOfStockException message) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message.getMessage());
+    public ResponseEntity<Object> handleOutOfStock(OutOfStockException message) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", message.getMessage());
+        return new ResponseEntity<>(responseBody, message.httpStatus);
     }
+
 
 
 
