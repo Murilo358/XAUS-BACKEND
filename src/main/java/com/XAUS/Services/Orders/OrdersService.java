@@ -10,7 +10,9 @@ import com.XAUS.Exceptions.OutOfStockException;
 import com.XAUS.Models.Clients.Clients;
 import com.XAUS.Models.Orders.Orders;
 import com.XAUS.Models.Products.Product;
+import com.XAUS.Models.User.Enums.UserRole;
 import com.XAUS.Models.User.User;
+import com.XAUS.Notifications.Orders.Publisher.OrdersPublisher;
 import com.XAUS.Utils.MapperUtils;
 import com.XAUS.Repositories.Clients.ClientsRepository;
 import com.XAUS.Repositories.Orders.OrdersRepository;
@@ -44,6 +46,9 @@ public class OrdersService {
     public ClientsRepository clientsRepository;
     @Autowired
     public UserRepository userRepository;
+    @Autowired
+    public OrdersPublisher ordersPublisher;
+
 
     private final ObjectMapper mapper = MapperUtils.createMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -72,10 +77,10 @@ public class OrdersService {
         AtomicReference<Float> orderPrice = new AtomicReference<>(0.0F);
 
 
-        List<JsonNode> findedProducts = products.stream()
-                .map(produtoInfo -> {
-                    long productId = produtoInfo.get(0);
-                    int quantity = produtoInfo.get(1);
+        List<JsonNode> foundProducts = products.stream()
+                .map(productInfo -> {
+                    long productId = productInfo.get(0);
+                    int quantity = productInfo.get(1);
 
                     Optional<Product> productOpt = this.productRepository.findById(productId);
                     if (productOpt.isPresent()) {
@@ -108,14 +113,14 @@ public class OrdersService {
 
         ArrayNode productsArray = mapper.createArrayNode();
 
-        for (JsonNode productNode : findedProducts) {
+        for (JsonNode productNode : foundProducts) {
             productsArray.add(productNode);
         }
-
-
             Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod()  );
 
-        return repository.save(newOrder);
+//        Orders savedOrder =  repository.save(newOrder);
+        ordersPublisher.notifyToUserRole(newOrder, UserRole.PACKAGER);
+        return newOrder;
     }
 
 

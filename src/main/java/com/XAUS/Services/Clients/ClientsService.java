@@ -52,13 +52,13 @@ public class ClientsService {
         Clients alreadyAddedEmail = repository.findbyEmail(email);
 
         if(cpf == null || email == null){
-            throw new CustomException("O email ou o cpf não pode ser null", HttpStatus.BAD_GATEWAY);
+            throw new CustomException("O email ou o cpf não pode ser null", HttpStatus.BAD_REQUEST);
         }
         else if(alreadyAddedCPF != null  ){
-            throw new CustomException("CPF já cadastrado", HttpStatus.BAD_GATEWAY);
+            throw new CustomException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
         }
         else if(alreadyAddedEmail != null){
-            throw new CustomException("Email já cadastrado", HttpStatus.BAD_GATEWAY);
+            throw new CustomException("Email já cadastrado", HttpStatus.BAD_REQUEST);
         }
 
     }

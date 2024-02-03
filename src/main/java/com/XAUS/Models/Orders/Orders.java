@@ -19,6 +19,7 @@ import java.util.Date;
 @TypeDef(name = "jsonb-node", typeClass = JsonNodeBinaryType.class)
 @Getter
 @Setter
+@ToString
 public class Orders {
 
     @Id

@@ -2,22 +2,19 @@ package com.XAUS.Controllers.Auth;
 
 import com.XAUS.DTOS.Auth.LoginRequestDTO;
 import com.XAUS.DTOS.Auth.LoginResponseDTO;
-import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.DTOS.Auth.ValidateTokenDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.Models.User.User;
-import com.XAUS.Models.User.Enums.UserRole;
-import com.XAUS.Repositories.User.UserRepository;
-import com.XAUS.SecurityConfig.TokenService;
+import com.XAUS.Services.Auth.AuthorizationService;
+import com.XAUS.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.regex.Pattern;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 
@@ -27,11 +24,11 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private TokenService tokenService;
+    private AuthorizationService authorizationService;
+
 
 
     //(POST) localhost:8080/auth/login
@@ -54,7 +51,7 @@ public class AuthenticationController {
     //=-==-=-=-Usuário de teste (PACKAGER) -=-=-=-
 
 //    {
-//        "email": "testeXAUSPACKAGER@gmail.com",
+//        "email": "testeXAUSPackager@gmail.com",
 //            "password": "123456"
 //    }
 
@@ -70,7 +67,7 @@ public class AuthenticationController {
 
         //Gera o token pro usuário e retorna
         //Get principal() pega o objeto principal instanciado, ou seja o usuário e da um cast pra user (User) , pois o generate token espera um usuário como parametro
-        var token = tokenService.generateToken((User) auth.getPrincipal() );
+        var token = authorizationService.generateToken((User) auth.getPrincipal() );
 
         //Retorna uma response com ok, e o token utilizando o LoginResponseDto
         return ResponseEntity.ok(new LoginResponseDTO(token, userRole));
@@ -78,44 +75,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserRequestDTO data) {
+    public ResponseEntity register(@RequestBody UserRequestDTO userData) {
 
-        User alreadyAddedEmail = userRepository.findByEmail(data.email());
-        User alreadyAddedCPF = userRepository.findByCPF(data.cpf());
+        userService.registerUser(userData);
 
-        if(alreadyAddedEmail != null){
-            throw new CustomException("Email ja cadastrado", HttpStatus.BAD_REQUEST);
-        }
 
-        if(alreadyAddedCPF != null){
-            throw new CustomException("CPF ja cadastrado", HttpStatus.BAD_REQUEST);
-        }
-        if(!Pattern.matches("[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}\\-[0-9]{2}", data.cpf())){
-            throw new CustomException("CPF invalido! formato aceito: xxx.xxx.xxx-xx", HttpStatus.BAD_REQUEST);
-        }
-        if(!Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", data.email())){
-            throw new CustomException("Email invalido!", HttpStatus.BAD_REQUEST);
-        }
-
-        String hashedPassword = passwordEncoder.encode(data.password());
-
-        User userData = new User(data);
-        userData.setPassword(hashedPassword);
-
-        this.userRepository.save(userData);
         return ResponseEntity.ok().build();
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity changeUserRole(@PathVariable Long id, @RequestBody ClientsRequestDTO newData){
-//        return this.clientsService.updateClient(id, newData);
-//    }
     @PostMapping("/validate")
         public ResponseEntity validateToken (@RequestBody String token){
-            String validatedToken = tokenService.validateToken(token);
-            User user = userRepository.findByEmail(validatedToken);
+        User user = authorizationService.validateToken(token);
 
-            if(validatedToken.isBlank()){
+            if(user == null){
                 return ResponseEntity.badRequest().build();
             }
             else{
@@ -123,11 +95,6 @@ public class AuthenticationController {
             }
         }
 
-    @GetMapping("/allRoles")
-    public UserRole[] getAllAvailableRoles(){
-       return UserRole.values();
 
-
-    }
 
     }

@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", unique=true)
     private String email;
 
     @Column(name = "birthDate")
@@ -66,7 +66,7 @@ public class User implements UserDetails {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_PACKAGER"),new SimpleGrantedAuthority("ROLE_SALES") );
 
             case SALES:
-            return  List.of(new SimpleGrantedAuthority("ROLE_SALES"), new SimpleGrantedAuthority("ROLE_PACKAGER"));
+            return  List.of(new SimpleGrantedAuthority("ROLE_SALES"));
 
             default: return List.of(new SimpleGrantedAuthority("ROLE_PACKAGER"));
         }
