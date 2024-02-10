@@ -2,19 +2,18 @@ package com.XAUS.Controllers.Auth;
 
 import com.XAUS.DTOS.Auth.LoginRequestDTO;
 import com.XAUS.DTOS.Auth.LoginResponseDTO;
-import com.XAUS.DTOS.Auth.ValidateTokenDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
+import com.XAUS.DTOS.Auth.ValidateTokenDTO;
+import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.User.User;
 import com.XAUS.Services.Auth.AuthorizationService;
 import com.XAUS.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 
@@ -38,7 +37,7 @@ public class AuthenticationController {
 //
 //    {
 //        "email": "testeXAUS@gmail.com",
-//            "password": "123456"
+//            "password": "Teste2@"
 //    }
 
     //=-==-=-=-Usuário de teste (SALES) -=-=-=-
@@ -88,7 +87,7 @@ public class AuthenticationController {
         User user = authorizationService.validateToken(token);
 
             if(user == null){
-                return ResponseEntity.badRequest().build();
+                throw new CustomException("Invalid token!",HttpStatus.BAD_REQUEST);
             }
             else{
                 return ResponseEntity.ok(new ValidateTokenDTO(user.getAuthorities(), user.getName(), user.getId()  ) );

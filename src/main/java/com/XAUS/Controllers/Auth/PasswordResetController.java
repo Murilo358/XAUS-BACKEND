@@ -7,6 +7,8 @@ import com.XAUS.Services.Auth.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/password")
 public class PasswordResetController {
@@ -15,7 +17,7 @@ public class PasswordResetController {
     PasswordResetService passwordResetService;
 
     @PostMapping("/generateToken")
-    public void generateToken (@RequestBody GenerateTokenDTO generateTokenDTO){
+    public void generateToken (@RequestBody GenerateTokenDTO generateTokenDTO) throws MessagingException {
         passwordResetService.generateAndSendToken(generateTokenDTO);
 
     }

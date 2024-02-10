@@ -8,11 +8,13 @@ import com.XAUS.Models.Auth.PasswordResetToken;
 import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.Auth.PasswordResetRepository;
 import com.XAUS.Services.EmailSender.EmailService;
+import com.XAUS.Services.EmailSender.HtmlEmailGenerator;
 import com.XAUS.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +30,9 @@ public class PasswordResetService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HtmlEmailGenerator htmlEmailGenerator;
 
     public void createPasswordResetToken(User user, String passwordToken) {
 
@@ -53,7 +58,7 @@ public class PasswordResetService {
 
     }
 
-    public void generateAndSendToken(GenerateTokenDTO generateTokenDTO) {
+    public void generateAndSendToken(GenerateTokenDTO generateTokenDTO) throws MessagingException {
 
         User user = userService.findUserByEmail(generateTokenDTO.email());
         if (user != null) {
@@ -66,16 +71,15 @@ public class PasswordResetService {
 
     }
 
-    private void sendPasswordResetEmail(User user, String passwordToken) {
+    private void sendPasswordResetEmail(User user, String passwordToken) throws MessagingException {
 
+        //TODO: CHANGE IT TO THE PUBLISHED URL
         String url = "http://localhost:5173/password-recover/" + passwordToken;
+
+
+        String text = htmlEmailGenerator.generateRecoverPasswordHtml(user.getName(), url);
 //        emailService.sendSimpleMessage(user.getEmail(), );
-        emailService.sendSimpleMessage(user.getEmail(), "Recuperação de senha - Xaus system",
-                "<p> Olá, " + user.getName() + ", </p>\n" +
-                        "<p><b>Recentemente você solicitou a alteração da sua senha,</b>\n" +
-                        " Por favor, clique no link abaixo para realizar a operação.</p>+\n" +
-                        "<a href=\"" + url + "\">Reiniciar senha</a>\n" +
-                        "<p>Xaus-systems</p>");
+        emailService.sendRecoverPasswordMessage(user.getEmail(), "Recuperação de senha - Xaus system", text);
 
     }
 

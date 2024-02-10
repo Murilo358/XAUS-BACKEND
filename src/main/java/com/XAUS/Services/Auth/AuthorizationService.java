@@ -1,6 +1,7 @@
 package com.XAUS.Services.Auth;
 
 import com.XAUS.Configs.SecurityConfig.TokenService;
+
 import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,13 @@ public class AuthorizationService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-//        User storedUser = userRepository.findByEmail(email);
-//        if (storedUser != null) {
-//            if (passwordEncoder.matches(user.password(), storedUser.getPassword())) {
-//                return storedUser;
-//            }
-//        }
-
         return userRepository.findByEmail(email);
     }
 
     public User validateToken(String token){
 
         String validatedToken = tokenService.validateToken(token);
-        User user = userRepository.findByEmail(validatedToken);
-        return user;
+        return userRepository.findByEmail(validatedToken);
 
     }
     public String generateToken(User user){
