@@ -61,7 +61,7 @@ public class OrdersService {
 //        {
 //                "userId": 10, (coloque o id do usuário desejado)
 //                "clientId": 1,  (coloque o id do cliente desejado, se for null será o 1(não cadastrado))
-//                "products": [[1,2], [1,10]] (coloque o id do produto, quantidade a ser comprada)
+//                "products": [[1,2], [1,10]] (id do produto, quantidade)
 //        }
 
         User user = this.userRepository.findById(data.userId()).orElse(null);
@@ -118,9 +118,9 @@ public class OrdersService {
         }
             Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod()  );
 
-//        Orders savedOrder =  repository.save(newOrder);
-        ordersPublisher.notifyToUserRole(newOrder, UserRole.PACKAGER);
-        return newOrder;
+        Orders savedOrder =  repository.save(newOrder);
+        ordersPublisher.notifyToUserRole(savedOrder, UserRole.PACKAGER);
+        return savedOrder;
     }
 
 
@@ -156,6 +156,7 @@ public class OrdersService {
                     dto.setUserId(order.getUserId());
                     dto.setClientName(order.getClientName());
                     dto.setItsPayed(order.getItsPayed());
+                    dto.setItsPackaged(order.getItsPackaged());
                     dto.setClientId(order.getClientId());
                     dto.setOrderPrice(order.getOrderPrice());
                     dto.setClientCpf(order.getClientCpf());
@@ -211,6 +212,20 @@ public class OrdersService {
         return this.repository.getProductsReport();
     }
 
+    public ResponseEntity setOrderPackaged(Long orderId,Boolean setPackaged){
+
+        Optional<Orders> order = repository.findById(orderId);
+
+        if (order.isPresent()) {
+            Orders orders = order.get();
+            orders.setItsPackaged(setPackaged);
+            repository.save(orders);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
     public ResponseEntity setOrderPayed(Long orderId){
 
         Optional<Orders> order = repository.findById(orderId);

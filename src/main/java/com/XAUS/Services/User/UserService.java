@@ -45,7 +45,7 @@ public class UserService {
 
         User alreadyAddedEmail = userRepository.findByEmail(email);
         if(alreadyAddedEmail != null){
-            throw new CustomException("Email ja cadastrado", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Email já cadastrado", HttpStatus.BAD_REQUEST);
         }
 
 
@@ -54,14 +54,14 @@ public class UserService {
         User alreadyAddedCPF = userRepository.findByCPF(cpf);
 
         if(alreadyAddedCPF != null){
-            throw new CustomException("CPF ja cadastrado", HttpStatus.BAD_REQUEST);
+            throw new CustomException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
         }
     }
 
     public void verifyEmailAndCPF(String cpf, String userEmail){
 
         if(!Pattern.matches("[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}\\-[0-9]{2}", cpf)){
-            throw new CustomException("CPF invalido! formato aceito: xxx.xxx.xxx-xx", HttpStatus.BAD_REQUEST);
+            throw new CustomException("CPF inválido! formato aceito: xxx.xxx.xxx-xx", HttpStatus.BAD_REQUEST);
         }
         if(!Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", userEmail)){
             throw new CustomException("Email inválido!", HttpStatus.BAD_REQUEST);
@@ -69,9 +69,7 @@ public class UserService {
 
     }
 
-//    public static void main(String[] args) {
-//        validatePassword("Teste2@");
-//    }
+
 
     public static void validatePassword(String password){
 

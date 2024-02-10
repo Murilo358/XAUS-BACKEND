@@ -23,7 +23,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
 
     @Query(value = "SELECT o.id AS Id, o.created_at as createdAt, me.id as paymentMethodId, me.payment_method as paymentMethod,  o.user_id AS userId, o.user_name AS userName," +
             " o.client_id as clientId, o.client_cpf as clientCpf, " +
-            "o.client_name as clientName , o.order_price AS orderPrice, o.its_payed as itsPayed " +
+            "o.client_name as clientName , o.order_price AS orderPrice, o.its_payed as itsPayed, o.its_packaged as itsPackaged  " +
             "FROM orders AS o " +
             "LEFT JOIN payment_methods as me on o.payment_method = me.id " +
             "WHERE (:param_type = 'user' AND o.user_id = :id) OR (:param_type = 'client' AND o.client_id = :id)"+

@@ -52,6 +52,9 @@ public class Orders {
     @Column(name = "itsPayed")
     private  Boolean itsPayed;
 
+    @Column(name = "itsPackaged", columnDefinition = "boolean default false")
+    private  Boolean itsPackaged;
+
 
     @Column(name= "paymentMethod")
     @JoinColumn(name = "id", referencedColumnName = "paymentMethod")

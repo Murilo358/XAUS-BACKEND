@@ -13,6 +13,7 @@ public interface OrdersConvertResponseDTO {
     Long getClientId();
     String getClientCpf();
     Boolean getItsPayed();
+    Boolean getItsPackaged();
     Float getOrderPrice();
 
     Long getPaymentMethodId();

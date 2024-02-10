@@ -57,5 +57,9 @@ public class OrdersController {
         return ordersService.getProductsReport();
     }
 
+    @PostMapping("{orderId}/setPackaged")
+    public ResponseEntity setOrderItsPackaged(@PathVariable Long orderId, @RequestBody Boolean setPackaged){
+        return ordersService.setOrderPackaged(orderId, setPackaged);
+    }
 
 }
