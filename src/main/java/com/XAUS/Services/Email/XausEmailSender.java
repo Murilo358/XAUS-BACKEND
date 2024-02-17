@@ -1,4 +1,4 @@
-package com.XAUS.Services.EmailSender;
+package com.XAUS.Services.Email;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -1,4 +1,4 @@
-package com.XAUS.Services.EmailSender;
+package com.XAUS.Services.Email;
 
 import com.XAUS.Managers.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.concurrent.Executors;
 
 @Component
 public class EmailServiceImpl implements EmailService {
@@ -28,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setFrom("murilobarbosa358@gmail.com");
         helper.setTo(to);
         helper.setText(text, true);
-        emailSender.send(message);
+        Executors.newSingleThreadExecutor().execute(() -> emailSender.send(message));
 
 
     }
@@ -44,9 +45,10 @@ public class EmailServiceImpl implements EmailService {
             ClassPathResource xausLogo = new ClassPathResource("/static/images/xaus-logo.png");
             helper.addInline("xaus-logo", xausLogo);
             helper.setFrom("murilobarbosa358@gmail.com");
-            helper.setTo("murilogamerbr21@gmail.com");
+            helper.setTo(to);
             helper.setSubject(subject);
-            emailSender.send(message);
+            Executors.newSingleThreadExecutor().execute(() -> emailSender.send(message));
+
 
         }catch(MessagingException e ){
             LogManager.logError(getClass(), "Error while send user message ", e);
