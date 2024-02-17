@@ -20,9 +20,7 @@ public class ProductService {
     public ProductRepository repository;
 
     public List<ProductResponseDTO> getAll() {
-        //Metodo stream() pega tudo que vem do repositorio e coloca em um (funil) para mapearmos
         return repository.findAll().stream().map(ProductResponseDTO::new).toList();
-
     }
 
     public Product saveProduct(@RequestBody ProductRequestDTO data) {
@@ -41,14 +39,14 @@ public class ProductService {
 
         Product product = this.repository.findById(id).orElse(null);
         if(product == null){
-            throw new CustomException("Produto não encontrado", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("Produto não encontrado", HttpStatus.NOT_FOUND);
         }
         return product;
     }
 
     public ResponseEntity deleteProduct(Long id){
 
-        //Just checking if its not null
+        //Just checking if isn't null
         this.findById(id);
 
         repository.deleteById(id);
