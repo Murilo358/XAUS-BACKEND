@@ -96,9 +96,8 @@ public class UserService {
         validatePassword(userData.password());
         String hashedPassword = passwordEncoder.encode(userData.password());
 
-        User user = new User(userData);
+        User user = new User(userData, true);
         user.setPassword(hashedPassword);
-
         this.userRepository.save(user);
     }
 
@@ -116,6 +115,7 @@ public class UserService {
         user.setCpf(userData.cpf());
         user.setEmail(userData.email());
         user.setRole(UserRole.valueOf(userData.role()));
+        user.setEnabled(userData.enabled());
         userRepository.save(user);
 
     }
