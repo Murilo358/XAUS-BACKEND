@@ -49,9 +49,13 @@ public class SecurityConfig {
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "POST")).hasRole("ADMIN")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "PUT")).hasRole( "ADMIN")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "DELETE")).hasRole( "ADMIN")
-                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders(.*)", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/create", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/(.*)/setPayed", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/(.*)/setPackaged", "POST")).hasRole("PACKAGER")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/clients(.*)", "POST")).hasRole( "SALES")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/clients(.*)", "DELETE")).hasRole( "ADMIN")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/users/getAll", "GET")).hasRole( "ADMIN")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/users/allRoles", "GET")).authenticated()
                                         .anyRequest().authenticated();
                         }
 //

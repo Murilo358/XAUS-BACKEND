@@ -116,7 +116,7 @@ public class OrdersService {
         for (JsonNode productNode : foundProducts) {
             productsArray.add(productNode);
         }
-            Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod()  );
+            Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod() , false );
 
         Orders savedOrder =  repository.save(newOrder);
         ordersPublisher.notifyToUserRole(savedOrder, UserRole.PACKAGER);

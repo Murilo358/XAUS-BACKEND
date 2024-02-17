@@ -1,6 +1,7 @@
 package com.XAUS.Services.User;
 
 import com.XAUS.DTOS.Auth.PasswordResetDTO;
+import com.XAUS.DTOS.Users.UpdateUserDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.User.Enums.UserRole;
@@ -8,9 +9,13 @@ import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 @Service
 public class UserService {
@@ -97,5 +102,25 @@ public class UserService {
         this.userRepository.save(user);
     }
 
+    public List<User> getAllUsers(){
+        List<User> allUsers = userRepository.findAll();
+        allUsers.forEach(u -> u.setPassword(null));
+        return allUsers;
+    }
+
+
+    public void updateUser(Long userId, UpdateUserDTO userData){
+
+        User user = userRepository.findById(userId).orElseThrow(()->  new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+        user.setName(userData.name());
+        user.setCpf(userData.cpf());
+        user.setEmail(userData.email());
+        user.setRole(UserRole.valueOf(userData.role()));
+        userRepository.save(user);
+
+    }
+    public List<String> formatUserRoles(Collection<? extends GrantedAuthority> authorities){
+        return authorities.stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();
+    }
 
 }
