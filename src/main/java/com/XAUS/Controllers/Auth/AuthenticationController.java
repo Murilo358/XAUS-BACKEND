@@ -15,6 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 
 @RequestMapping("auth")
@@ -61,15 +63,10 @@ public class AuthenticationController {
 
         var emailAndPassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(emailAndPassword);
-        var userRole = auth.getAuthorities();
-
-
-        //Gera o token pro usuário e retorna
-        //Get principal() pega o objeto principal instanciado, ou seja o usuário e da um cast pra user (User) , pois o generate token espera um usuário como parametro
+        List<String> userRoles = auth.getAuthorities().stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();
         var token = authorizationService.generateToken((User) auth.getPrincipal() );
 
-        //Retorna uma response com ok, e o token utilizando o LoginResponseDto
-        return ResponseEntity.ok(new LoginResponseDTO(token, userRole));
+        return ResponseEntity.ok(new LoginResponseDTO(token, userRoles));
 
     }
 
@@ -77,7 +74,6 @@ public class AuthenticationController {
     public ResponseEntity register(@RequestBody UserRequestDTO userData) {
 
         userService.registerUser(userData);
-
 
         return ResponseEntity.ok().build();
     }
@@ -90,7 +86,8 @@ public class AuthenticationController {
                 throw new CustomException("Invalid token!",HttpStatus.BAD_REQUEST);
             }
             else{
-                return ResponseEntity.ok(new ValidateTokenDTO(user.getAuthorities(), user.getName(), user.getId()  ) );
+                List<String> userRoles = user.getAuthorities().stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();
+                return ResponseEntity.ok(new ValidateTokenDTO(userRoles, user.getName(), user.getId()  ) );
             }
         }
 
