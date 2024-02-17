@@ -7,8 +7,8 @@ import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.Auth.PasswordResetToken;
 import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.Auth.PasswordResetRepository;
-import com.XAUS.Services.EmailSender.EmailService;
-import com.XAUS.Services.EmailSender.HtmlEmailGenerator;
+import com.XAUS.Services.Email.EmailService;
+import com.XAUS.Services.Email.Html.HtmlEmailGenerator;
 import com.XAUS.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,14 +71,14 @@ public class PasswordResetService {
 
     }
 
-    private void sendPasswordResetEmail(User user, String passwordToken) throws MessagingException {
+    private void sendPasswordResetEmail(User user, String passwordToken)  {
 
         //TODO: CHANGE IT TO THE PUBLISHED URL
         String url = "http://localhost:5173/password-recover/" + passwordToken;
 
 
         String text = htmlEmailGenerator.generateRecoverPasswordHtml(user.getName(), url);
-//        emailService.sendSimpleMessage(user.getEmail(), );
+
         emailService.sendRecoverPasswordMessage(user.getEmail(), "Recuperação de senha - Xaus system", text);
 
     }
