@@ -1,6 +1,7 @@
 package com.XAUS.DTOS.Auth;
 
-import java.util.Collection;
 
-public record ValidateTokenDTO(Collection roles, String userName, Long userId) {
+import java.util.List;
+
+public record ValidateTokenDTO(List<String> roles, String userName, Long userId) {
 }
