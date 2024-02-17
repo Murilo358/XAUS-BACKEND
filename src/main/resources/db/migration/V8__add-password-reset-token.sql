@@ -1,4 +1,4 @@
-create table
+create table if not exists
   public.password_tokens (
     token_id bigserial,
     expiration_time timestamp without time zone null,
