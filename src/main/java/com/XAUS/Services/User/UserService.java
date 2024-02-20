@@ -119,6 +119,18 @@ public class UserService {
         userRepository.save(user);
 
     }
+
+    public void verifyIfItsTheLastAdmin(){
+        int count = userRepository.countByRole(String.valueOf(UserRole.ADMIN.ordinal()));
+        if (count <= 1){
+            throw new CustomException("Its needed at least one admin user!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void deleteUser(Long userId){
+        verifyIfItsTheLastAdmin();
+        userRepository.deleteById(userId);
+    }
     public List<String> formatUserRoles(Collection<? extends GrantedAuthority> authorities){
         return authorities.stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();
     }
