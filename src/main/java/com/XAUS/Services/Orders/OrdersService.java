@@ -13,6 +13,8 @@ import com.XAUS.Models.Products.Product;
 import com.XAUS.Models.User.Enums.UserRole;
 import com.XAUS.Models.User.User;
 import com.XAUS.Notifications.Orders.Publisher.OrdersPublisher;
+import com.XAUS.Services.Clients.ClientsService;
+import com.XAUS.Services.User.UserService;
 import com.XAUS.Utils.MapperUtils;
 import com.XAUS.Repositories.Clients.ClientsRepository;
 import com.XAUS.Repositories.Orders.OrdersRepository;
@@ -29,8 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -43,9 +45,9 @@ public class OrdersService {
     @Autowired
     public ProductRepository productRepository;
     @Autowired
-    public ClientsRepository clientsRepository;
+    public ClientsService clientsService;
     @Autowired
-    public UserRepository userRepository;
+    public UserService userService;
     @Autowired
     public OrdersPublisher ordersPublisher;
 
@@ -55,6 +57,8 @@ public class OrdersService {
 
     public Orders newOrder(@RequestBody OrderRequestDTO data) {
 
+        //TODO THREAT CORRECTLY NULL PAYMENT METHOD
+
 //       =-=-=-===-=-=-=-=TESTE DE POST=-=-=-===-=-=-=-=
 //                localhost:8080/orders/create
 
@@ -62,61 +66,42 @@ public class OrdersService {
 //                "userId": 10, (coloque o id do usuário desejado)
 //                "clientId": 1,  (coloque o id do cliente desejado, se for null será o 1(não cadastrado))
 //                "products": [[1,2], [1,10]] (id do produto, quantidade)
+//                "paymentMethod": 1 id do método de pagamento
 //        }
 
-        User user = this.userRepository.findById(data.userId()).orElse(null);
+        User user = this.userService.findById(data.userId()).orElseThrow(()-> new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        Clients client = this.clientsRepository.findById(data.clientId() != null ?data.clientId() : 1L).orElse(null);
-
-        if (user == null){
-            throw new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND);
-        }
+        Clients client = this.clientsService.findByIdWithoutError(data.clientId() != null ?data.clientId() : 1L).orElse(null);
 
         List<List<Integer>> products = data.products();
 
         AtomicReference<Float> orderPrice = new AtomicReference<>(0.0F);
 
+        List<JsonNode> foundProducts = new ArrayList<JsonNode>();
 
-        List<JsonNode> foundProducts = products.stream()
-                .map(productInfo -> {
-                    long productId = productInfo.get(0);
-                    int quantity = productInfo.get(1);
+        for (List<Integer> product : products) {
+            long productId = product.get(0);
+            int quantity = product.get(1);
 
-                    Optional<Product> productOpt = this.productRepository.findById(productId);
-                    if (productOpt.isPresent()) {
-                        Product product = productOpt.get();
-                        try{
-                            if (product.getQuantity() >= quantity) {
-                                product.setQuantity(product.getQuantity() - quantity);
-                                orderPrice.updateAndGet( v -> Float.sum(v , (product.getPrice() * quantity )) );
+            Product productOpt = this.productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found + " + productId, HttpStatus.BAD_REQUEST));
 
-                                OrderProductDTO orderProduct = new OrderProductDTO();
-                                orderProduct.setProductName(product.getName());
-                                orderProduct.setProductPrice(product.getPrice());
-                                orderProduct.setBuyedQuantity(quantity);
-                                return mapper.convertValue(orderProduct, JsonNode.class);
-                             }
-                            else{
-                                throw new RuntimeException();
-                            }
-                        }catch(Exception e){
-                            throw new OutOfStockException("Não há estoque suficiente para o produto "+ product.getName() + " selecionado.", HttpStatus.BAD_GATEWAY);
-                        }
-
-                    }
-                    return null;
-                })
-                .filter(Objects::nonNull)
-                .toList();
+            if (productOpt.getQuantity() >= quantity) {
+                productOpt.setQuantity(productOpt.getQuantity() - quantity);
+                orderPrice.updateAndGet(v -> Float.sum(v, (productOpt.getPrice() * quantity)));
+                OrderProductDTO orderProduct = new OrderProductDTO();
+                orderProduct.setProductName(productOpt.getName());
+                orderProduct.setProductPrice(productOpt.getPrice());
+                orderProduct.setBuyedQuantity(quantity);
+                foundProducts.add(mapper.convertValue(orderProduct, JsonNode.class));
+            } else {
+                throw new OutOfStockException("Não há estoque suficiente para o produto " + productOpt.getName() + " selecionado.", HttpStatus.BAD_GATEWAY);
+            }
+        }
 
         //Converting list of JsonNode to ArrayNode
 
-        ArrayNode productsArray = mapper.createArrayNode();
-
-        for (JsonNode productNode : foundProducts) {
-            productsArray.add(productNode);
-        }
-            Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod() , false );
+        ArrayNode productsArray = mapper.createArrayNode().addAll(foundProducts);
+        Orders newOrder = new Orders(data.userId(), user.getName(), client.getId(), client.getCpf(), client.getName(),productsArray,orderPrice.get(),false, data.paymentMethod() , false );
 
         Orders savedOrder =  repository.save(newOrder);
         ordersPublisher.notifyToUserRole(savedOrder, UserRole.PACKAGER);
