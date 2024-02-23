@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize-> {
                                 authorize
-                                        .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "POST")).permitAll()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "POST")).authenticated()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "POST")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "GET")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "GET")).permitAll()

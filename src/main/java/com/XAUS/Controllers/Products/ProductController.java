@@ -48,8 +48,9 @@ public class ProductController {
     }
 
     @PutMapping("/addStock/{productId}/{quantity}")
-    public ResponseEntity addStock(@PathVariable Long productId, @PathVariable Integer quantity){
-        return this.productService.addStock(productId, quantity);
+    public ResponseEntity addStock(@PathVariable Long productId, @PathVariable Integer quantity) {
+        this.productService.addStock(productId, quantity);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

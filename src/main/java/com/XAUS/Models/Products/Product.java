@@ -8,12 +8,6 @@ import javax.persistence.*;
 
 @Table(name = "Products")
 @Entity(name = "Products")
-//Usando a biblioteca lombok ele gera em tempo
-//de runtime os getters e constructor
-//Construtor sem argumento
-//Construtor com todos argumentos
-//Indica a representação unica dessa classe (deixa o objeto inmutavel)
-//@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")

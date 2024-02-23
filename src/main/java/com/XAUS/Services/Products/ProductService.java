@@ -6,6 +6,8 @@ import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.Products.Product;
 import com.XAUS.Repositories.Products.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,12 @@ public class ProductService {
     @Autowired
     public ProductRepository repository;
 
+    @Cacheable(value = "AllProducts" , key = "'all'")
     public List<ProductResponseDTO> getAll() {
         return repository.findAll().stream().map(ProductResponseDTO::new).toList();
     }
 
+    @CacheEvict(value = "AllProducts", allEntries = true)
     public Product saveProduct(@RequestBody ProductRequestDTO data) {
 
         if(data.name() == null || data.description() == null || data.price()  == null || data.quantity() == null){
@@ -53,6 +57,7 @@ public class ProductService {
         return  ResponseEntity.ok().build();
     }
 
+    @CacheEvict(value = "AllProducts", allEntries = true)
     public ResponseEntity updateProduct(Long id, @RequestBody ProductRequestDTO newData){
 
         Product product = this.findById(id);
@@ -66,13 +71,13 @@ public class ProductService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity addStock (Long id, Integer quantity){
+    @CacheEvict(value = "AllProducts", allEntries = true)
+    public void addStock (Long id, Integer quantity){
 
         Product product = this.findById(id);
 
         product.setQuantity(product.getQuantity() + quantity );
         repository.save(product);
-        return ResponseEntity.ok().build();
 
     }
 
