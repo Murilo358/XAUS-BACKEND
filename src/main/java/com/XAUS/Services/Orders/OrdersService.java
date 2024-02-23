@@ -13,13 +13,11 @@ import com.XAUS.Models.Products.Product;
 import com.XAUS.Models.User.Enums.UserRole;
 import com.XAUS.Models.User.User;
 import com.XAUS.Notifications.Orders.Publisher.OrdersPublisher;
+import com.XAUS.Repositories.Orders.OrdersRepository;
+import com.XAUS.Repositories.Products.ProductRepository;
 import com.XAUS.Services.Clients.ClientsService;
 import com.XAUS.Services.User.UserService;
 import com.XAUS.Utils.MapperUtils;
-import com.XAUS.Repositories.Clients.ClientsRepository;
-import com.XAUS.Repositories.Orders.OrdersRepository;
-import com.XAUS.Repositories.Products.ProductRepository;
-import com.XAUS.Repositories.User.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +68,7 @@ public class OrdersService {
 
         User user = this.userService.findById(data.userId()).orElseThrow(()-> new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        Clients client = this.clientsService.findByIdWithoutError(data.clientId() != null ?data.clientId() : 1L).orElse(null);
+        Clients client = this.clientsService.findByIdWithoutError(data.clientId() != null ? data.clientId() : 1L).orElseThrow(()-> new CustomException("Cliente não encontrado", HttpStatus.NOT_FOUND));
 
         List<List<Integer>> products = data.products();
 
@@ -83,7 +80,7 @@ public class OrdersService {
             long productId = product.get(0);
             int quantity = product.get(1);
 
-            Product productOpt = this.productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found + " + productId, HttpStatus.BAD_REQUEST));
+            Product productOpt = this.productRepository.findById(productId).orElseThrow(() -> new CustomException("Product with id: " + productId + " not found ", HttpStatus.BAD_REQUEST));
 
             if (productOpt.getQuantity() >= quantity) {
                 productOpt.setQuantity(productOpt.getQuantity() - quantity);
