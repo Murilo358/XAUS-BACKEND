@@ -1,4 +1,4 @@
-package com.XAUS.Services.EmailSender;
+package com.XAUS.Services.Email.Html;
 
 import com.XAUS.Managers.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;

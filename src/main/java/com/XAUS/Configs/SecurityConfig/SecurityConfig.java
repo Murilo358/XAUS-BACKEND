@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize-> {
                                 authorize
-                                        .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "POST")).permitAll()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "POST")).authenticated()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "POST")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "GET")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "GET")).permitAll()
@@ -49,9 +49,15 @@ public class SecurityConfig {
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "POST")).hasRole("ADMIN")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "PUT")).hasRole( "ADMIN")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/products(.*)", "DELETE")).hasRole( "ADMIN")
-                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders(.*)", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/create", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/(.*)/setPayed", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/orders/(.*)/setPackaged", "POST")).hasRole("PACKAGER")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/clients(.*)", "POST")).hasRole( "SALES")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/clients(.*)", "GET")).hasRole( "SALES")
                                         .requestMatchers(new RegexRequestMatcher("(.*)/clients(.*)", "DELETE")).hasRole( "ADMIN")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/users/getAll", "GET")).hasRole( "ADMIN")
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/users/allRoles", "GET")).authenticated()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/users(.*)", "DELETE")).hasRole("ADMIN")
                                         .anyRequest().authenticated();
                         }
 //

@@ -20,7 +20,9 @@ public class WebSocketEventListener {
     private void handleSessionConnected(SessionConnectEvent event) {
 
         if(event.getUser() != null){
-        LogManager.logInfo(getClass(), event.getUser() + " has connected to websockets");
+            if(event.getUser() != null){
+                LogManager.logInfo(getClass(), event.getUser() + " has connected to websockets");
+            }
         }
         else{
             LogManager.logInfo(getClass(), "A user has connected to websockets");

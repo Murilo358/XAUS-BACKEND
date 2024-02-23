@@ -65,7 +65,7 @@ public class Orders {
     private Date createdAt;
 
     public Orders(Long userId, String userName, Long clientId, String clientCpf, String clientName,
-                  JsonNode products, Float orderPrice, Boolean itsPayed, Long paymentMethod) {
+                  JsonNode products, Float orderPrice, Boolean itsPayed, Long paymentMethod, Boolean packaged) {
         this.userId = userId;
         this.userName = userName;
         this.clientId = clientId;
@@ -75,6 +75,7 @@ public class Orders {
         this.orderPrice = orderPrice;
         this.itsPayed = itsPayed;
         this.paymentMethod = paymentMethod;
+        this.itsPackaged = packaged;
     }
 
 

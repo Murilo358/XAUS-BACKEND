@@ -49,13 +49,17 @@ public class User implements UserDetails {
     @CreationTimestamp
     private Date createdAt;
 
-    public User(UserRequestDTO data) {
+    @Column(name = "isEnabled")
+    private boolean isEnabled;
+
+    public User(UserRequestDTO data, boolean isEnabled) {
         this.name = data.name();
         this.email = data.email();
         this.birthDate = data.birthDate();
         this.cpf = data.cpf();
         this.password = data.password();
         this.role = data.role();
+        this.isEnabled = isEnabled;
     }
 
     @Override
@@ -95,8 +99,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
-
 
 }

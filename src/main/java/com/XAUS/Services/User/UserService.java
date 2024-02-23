@@ -1,6 +1,7 @@
 package com.XAUS.Services.User;
 
 import com.XAUS.DTOS.Auth.PasswordResetDTO;
+import com.XAUS.DTOS.Users.UpdateUserDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.Exceptions.CustomException;
 import com.XAUS.Models.User.Enums.UserRole;
@@ -8,9 +9,13 @@ import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class UserService {
@@ -69,7 +74,9 @@ public class UserService {
 
     }
 
-
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+    }
 
     public static void validatePassword(String password){
 
@@ -91,11 +98,43 @@ public class UserService {
         validatePassword(userData.password());
         String hashedPassword = passwordEncoder.encode(userData.password());
 
-        User user = new User(userData);
+        User user = new User(userData, true);
         user.setPassword(hashedPassword);
-
         this.userRepository.save(user);
     }
 
+    public List<User> getAllUsers(){
+        List<User> allUsers = userRepository.findAll();
+        allUsers.forEach(u -> u.setPassword(null));
+        return allUsers;
+    }
+
+
+    public void updateUser(Long userId, UpdateUserDTO userData){
+
+        User user = userRepository.findById(userId).orElseThrow(()->  new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+        user.setName(userData.name());
+        user.setCpf(userData.cpf());
+        user.setEmail(userData.email());
+        user.setRole(UserRole.valueOf(userData.role()));
+        user.setEnabled(userData.enabled());
+        userRepository.save(user);
+
+    }
+
+    public void verifyIfItsTheLastAdmin(){
+        int count = userRepository.countByRole(String.valueOf(UserRole.ADMIN.ordinal()));
+        if (count <= 1){
+            throw new CustomException("Its needed at least one admin user!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void deleteUser(Long userId){
+        verifyIfItsTheLastAdmin();
+        userRepository.deleteById(userId);
+    }
+    public List<String> formatUserRoles(Collection<? extends GrantedAuthority> authorities){
+        return authorities.stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();
+    }
 
 }

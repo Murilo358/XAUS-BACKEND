@@ -13,6 +13,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -45,7 +46,9 @@ public class ClientsService {
 
     }
 
-
+    public Optional<Clients> findByIdWithoutError(Long id){
+        return repository.findById(id);
+    }
 
     public void checkAlreadyExists(String cpf, String email){
         Clients alreadyAddedCPF = repository.findbyCPF(cpf);

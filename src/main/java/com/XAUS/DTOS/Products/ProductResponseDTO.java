@@ -2,7 +2,9 @@ package com.XAUS.DTOS.Products;
 
 import com.XAUS.Models.Products.Product;
 
-public record ProductResponseDTO(Long id, String name, String description, Float price, Integer quantity) {
+import java.io.Serializable;
+
+public record ProductResponseDTO(Long id, String name, String description, Float price, Integer quantity) implements Serializable {
 
 
     public ProductResponseDTO(Product product) {

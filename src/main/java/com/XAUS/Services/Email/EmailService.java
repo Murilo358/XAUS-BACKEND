@@ -1,4 +1,4 @@
-package com.XAUS.Services.EmailSender;
+package com.XAUS.Services.Email;
 
 import javax.mail.MessagingException;
 public interface EmailService {

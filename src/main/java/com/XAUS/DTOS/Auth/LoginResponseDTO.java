@@ -1,7 +1,8 @@
 package com.XAUS.DTOS.Auth;
 
-import java.util.Collection;
 
-public record LoginResponseDTO(String token, Collection Roles) {
+import java.util.List;
+
+public record LoginResponseDTO(String token, List<String> Roles) {
 
 }
