@@ -3,7 +3,7 @@ package com.XAUS.Services.Auth;
 
 import com.XAUS.DTOS.Auth.GenerateTokenDTO;
 import com.XAUS.DTOS.Auth.PasswordResetDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Models.Auth.PasswordResetToken;
 import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.Auth.PasswordResetRepository;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,7 +43,7 @@ public class PasswordResetService {
 
     public void validatePasswords(PasswordResetDTO passwordResetDTO) {
         if (!passwordResetDTO.newPassword().equals(passwordResetDTO.confirmPassword())) {
-            throw new CustomException("Passwords do not match", HttpStatus.BAD_REQUEST);
+            throw new XausException("Passwords do not match", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -66,7 +66,7 @@ public class PasswordResetService {
             createPasswordResetToken(user, passwordToken);
             sendPasswordResetEmail(user, passwordToken);
         } else {
-            throw new CustomException("There's no generated token for user with email " + generateTokenDTO.email(), HttpStatus.NOT_FOUND);
+            throw new XausException("There's no generated token for user with email " + generateTokenDTO.email(), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -88,12 +88,12 @@ public class PasswordResetService {
 
         PasswordResetToken passwordToken = passwordResetRepository.findByToken(passwordResetToken);
         if (passwordToken == null) {
-            throw new CustomException("There is no matching generated tokens to: " + passwordResetToken, HttpStatus.BAD_REQUEST);
+            throw new XausException("There is no matching generated tokens to: " + passwordResetToken, HttpStatus.BAD_REQUEST);
         }
         Calendar calendar = Calendar.getInstance();
 
         if ((passwordToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
-            throw new CustomException("Link already expired, resend link", HttpStatus.BAD_REQUEST);
+            throw new XausException("Link already expired, resend link", HttpStatus.BAD_REQUEST);
         }
         return true;
     }

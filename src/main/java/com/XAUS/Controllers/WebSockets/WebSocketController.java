@@ -12,7 +12,6 @@ public class WebSocketController {
     @MessageMapping("/newOrder")
     @SendTo("/topic/notify")
     public String broadcastMessage(@Payload Orders order) {
-        System.out.println("Received on websocket " + order.getProducts());
         return "You have received a order from front-end: " + order.getProducts();
     }
 

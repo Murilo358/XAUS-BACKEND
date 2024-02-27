@@ -3,7 +3,7 @@ package com.XAUS.Services.User;
 import com.XAUS.DTOS.Auth.PasswordResetDTO;
 import com.XAUS.DTOS.Users.UpdateUserDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Models.User.Enums.UserRole;
 import com.XAUS.Models.User.User;
 import com.XAUS.Repositories.User.UserRepository;
@@ -50,7 +50,7 @@ public class UserService {
 
         User alreadyAddedEmail = userRepository.findByEmail(email);
         if(alreadyAddedEmail != null){
-            throw new CustomException("Email já cadastrado", HttpStatus.BAD_REQUEST);
+            throw new XausException("Email já cadastrado", HttpStatus.BAD_REQUEST);
         }
 
 
@@ -59,17 +59,17 @@ public class UserService {
         User alreadyAddedCPF = userRepository.findByCPF(cpf);
 
         if(alreadyAddedCPF != null){
-            throw new CustomException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
+            throw new XausException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
         }
     }
 
     public void verifyEmailAndCPF(String cpf, String userEmail){
 
         if(!Pattern.matches("[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}\\-[0-9]{2}", cpf)){
-            throw new CustomException("CPF inválido! formato aceito: xxx.xxx.xxx-xx", HttpStatus.BAD_REQUEST);
+            throw new XausException("CPF inválido! formato aceito: xxx.xxx.xxx-xx", HttpStatus.BAD_REQUEST);
         }
         if(!Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", userEmail)){
-            throw new CustomException("Email inválido!", HttpStatus.BAD_REQUEST);
+            throw new XausException("Email inválido!", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -80,11 +80,13 @@ public class UserService {
 
     public static void validatePassword(String password){
 
-        if(!Pattern.matches( "^(?=.*[0-9])"+
-                 "(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=])"
-                + "(?=\\S+$).{6,20}$", password)){
-            throw new CustomException("A senha precisa conter no mínimo 6 caracteres, um caractere maiúsculo, e um caractere especial ", HttpStatus.BAD_REQUEST);
+        if(!Pattern.matches( """
+                ^(?=.*[0-9])\
+                (?=.*[A-Z])\
+                (?=.*[@#$%^&+=])\
+                (?=\\S+$).{6,20}$\
+                """, password)){
+            throw new XausException("A senha precisa conter no mínimo 6 caracteres, um caractere maiúsculo, e um caractere especial ", HttpStatus.BAD_REQUEST);
         }
 
 
@@ -112,7 +114,7 @@ public class UserService {
 
     public void updateUser(Long userId, UpdateUserDTO userData){
 
-        User user = userRepository.findById(userId).orElseThrow(()->  new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(()->  new XausException("Usuário não encontrado", HttpStatus.NOT_FOUND));
         user.setName(userData.name());
         user.setCpf(userData.cpf());
         user.setEmail(userData.email());
@@ -125,7 +127,7 @@ public class UserService {
     public void verifyIfItsTheLastAdmin(){
         int count = userRepository.countByRole(String.valueOf(UserRole.ADMIN.ordinal()));
         if (count <= 1){
-            throw new CustomException("Its needed at least one admin user!", HttpStatus.BAD_REQUEST);
+            throw new XausException("Its needed at least one admin user!", HttpStatus.BAD_REQUEST);
         }
     }
 

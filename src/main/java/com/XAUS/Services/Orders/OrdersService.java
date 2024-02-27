@@ -5,7 +5,7 @@ import com.XAUS.DTOS.Orders.OrderRequestDTO;
 import com.XAUS.DTOS.Orders.OrdersConvertResponseDTO;
 import com.XAUS.DTOS.Orders.OrdersResponseDTO;
 import com.XAUS.DTOS.Products.ProductsReportsReponseDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Exceptions.OutOfStockException;
 import com.XAUS.Models.Clients.Clients;
 import com.XAUS.Models.Orders.Orders;
@@ -66,9 +66,9 @@ public class OrdersService {
 //                "paymentMethod": 1 id do método de pagamento
 //        }
 
-        User user = this.userService.findById(data.userId()).orElseThrow(()-> new CustomException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+        User user = this.userService.findById(data.userId()).orElseThrow(()-> new XausException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        Clients client = this.clientsService.findByIdWithoutError(data.clientId() != null ? data.clientId() : 1L).orElseThrow(()-> new CustomException("Cliente não encontrado", HttpStatus.NOT_FOUND));
+        Clients client = this.clientsService.findByIdWithoutError(data.clientId() != null ? data.clientId() : 1L).orElseThrow(()-> new XausException("Cliente não encontrado", HttpStatus.NOT_FOUND));
 
         List<List<Integer>> products = data.products();
 
@@ -80,7 +80,7 @@ public class OrdersService {
             long productId = product.get(0);
             int quantity = product.get(1);
 
-            Product productOpt = this.productRepository.findById(productId).orElseThrow(() -> new CustomException("Product with id: " + productId + " not found ", HttpStatus.BAD_REQUEST));
+            Product productOpt = this.productRepository.findById(productId).orElseThrow(() -> new XausException("Product with id: " + productId + " not found ", HttpStatus.BAD_REQUEST));
 
             if (productOpt.getQuantity() >= quantity) {
                 productOpt.setQuantity(productOpt.getQuantity() - quantity);
@@ -112,7 +112,7 @@ public class OrdersService {
 
         if (order == null) {
 
-            throw new CustomException("Pedido não encontrado.",  HttpStatus.NOT_FOUND);
+            throw new XausException("Pedido não encontrado.",  HttpStatus.NOT_FOUND);
         }
 
         return this.prepareData(order);
@@ -123,7 +123,7 @@ public class OrdersService {
         List<OrdersConvertResponseDTO> orders = repository.findBySomething(id, "user");
 
         if (orders.isEmpty()){
-            throw new CustomException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
+            throw new XausException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
         }
 
         return this.prepareData(orders);
@@ -131,37 +131,37 @@ public class OrdersService {
 
     public List<OrdersResponseDTO> prepareData(List<OrdersConvertResponseDTO> orders){
 
-        return orders.stream()
-                .map(order -> {
-                    OrdersResponseDTO dto = new OrdersResponseDTO();
-                    dto.setUserName(order.getUserName());
-                    dto.setUserId(order.getUserId());
-                    dto.setClientName(order.getClientName());
-                    dto.setItsPayed(order.getItsPayed());
-                    dto.setItsPackaged(order.getItsPackaged());
-                    dto.setClientId(order.getClientId());
-                    dto.setOrderPrice(order.getOrderPrice());
-                    dto.setClientCpf(order.getClientCpf());
-                    dto.setId(order.getId());
-                    dto.setPaymentMethodId(order.getPaymentMethodId());
-                    dto.setPaymentMethod(order.getPaymentMethod());
-                    dto.setCreatedAt(order.getCreatedAt());
+        List<OrdersResponseDTO> data = new ArrayList<OrdersResponseDTO>();
 
-                    List<OrderProductDTO> productDTOs = repository.findProductsBySomething(order.getId()).stream()
-                            .map(product -> {
-                                OrderProductDTO productDTO = new OrderProductDTO();
-                                productDTO.setProductName(product.getProductName());
-                                productDTO.setProductPrice(product.getProductPrice());
-                                productDTO.setBuyedQuantity(product.getBuyedQuantity());
-                                return productDTO;
-                            })
-                            .collect(Collectors.toList());
+        for(OrdersConvertResponseDTO order : orders){
+            OrdersResponseDTO dto = new OrdersResponseDTO();
+            dto.setUserName(order.getUserName());
+            dto.setUserId(order.getUserId());
+            dto.setClientName(order.getClientName());
+            dto.setItsPayed(order.getItsPayed());
+            dto.setItsPackaged(order.getItsPackaged());
+            dto.setClientId(order.getClientId());
+            dto.setOrderPrice(order.getOrderPrice());
+            dto.setClientCpf(order.getClientCpf());
+            dto.setId(order.getId());
+            dto.setPaymentMethodId(order.getPaymentMethodId());
+            dto.setPaymentMethod(order.getPaymentMethod());
+            dto.setCreatedAt(order.getCreatedAt());
 
-                    dto.setProducts(productDTOs);
+            List<OrderProductDTO> productDTOs = repository.findProductsBySomething(order.getId()).stream()
+                    .map(product -> {
+                        OrderProductDTO productDTO = new OrderProductDTO();
+                        productDTO.setProductName(product.getProductName());
+                        productDTO.setProductPrice(product.getProductPrice());
+                        productDTO.setBuyedQuantity(product.getBuyedQuantity());
+                        return productDTO;
+                    })
+                    .collect(Collectors.toList());
 
-                    return dto;
-                })
-                .collect(Collectors.toList());
+            dto.setProducts(productDTOs);
+            data.add(dto);
+        }
+        return data;
 
 
     }
@@ -170,9 +170,8 @@ public class OrdersService {
 
         List<OrdersConvertResponseDTO> orders = repository.findBySomething(id, "client");
 
-
         if (orders.isEmpty()){
-            throw new CustomException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
+            throw new XausException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
         }
 
         return this.prepareData(orders);
@@ -184,7 +183,7 @@ public class OrdersService {
         List<OrdersConvertResponseDTO> orders = repository.findBySomething(1L, "nothing");
 
         if (orders.isEmpty()){
-            throw new CustomException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
+            throw new XausException("Nenhum pedido encontrado. ",  HttpStatus.NOT_FOUND);
         }
 
         return this.prepareData(orders);
@@ -194,33 +193,21 @@ public class OrdersService {
         return this.repository.getProductsReport();
     }
 
-    public ResponseEntity setOrderPackaged(Long orderId,Boolean setPackaged){
+    public void setOrderPackaged(Long orderId, Boolean setPackaged) {
 
-        Optional<Orders> order = repository.findById(orderId);
+        Orders order = repository.findById(orderId).orElseThrow(() -> new XausException("Order not found", HttpStatus.NOT_FOUND));
 
-        if (order.isPresent()) {
-            Orders orders = order.get();
-            orders.setItsPackaged(setPackaged);
-            repository.save(orders);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        order.setItsPackaged(setPackaged);
+        repository.save(order);
 
     }
-    public ResponseEntity setOrderPayed(Long orderId){
 
-        Optional<Orders> order = repository.findById(orderId);
+    public void setOrderPayed(Long orderId) {
 
-        if (order.isPresent()) {
-            Orders orders = order.get();
-            orders.setItsPayed(Boolean.TRUE);
-            repository.save(orders);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Orders order = repository.findById(orderId).orElseThrow(() -> new XausException("Order not found", HttpStatus.NOT_FOUND));
 
+        order.setItsPayed(Boolean.TRUE);
+        repository.save(order);
 
     }
 

@@ -3,12 +3,12 @@ package com.XAUS.Models.Orders;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import io.hypersistence.utils.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
+import jakarta.persistence.*;
+import org.hibernate.type.SqlTypes;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "orders")
@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@TypeDef(name = "jsonb-node", typeClass = JsonNodeBinaryType.class)
+@Convert(attributeName = "entityAttrName", converter = JsonNodeBinaryType.class)
 @Getter
 @Setter
 @ToString
@@ -42,7 +42,7 @@ public class Orders {
     @Column(name = "client_name ")
     private  String clientName;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "products", columnDefinition = "jsonb", nullable = false)
     private JsonNode products;
 

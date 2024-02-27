@@ -1,10 +1,10 @@
 package com.XAUS.Models.Products;
 
 import com.XAUS.DTOS.Products.ProductRequestDTO;
-import com.sun.istack.NotNull;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Table(name = "Products")
 @Entity(name = "Products")

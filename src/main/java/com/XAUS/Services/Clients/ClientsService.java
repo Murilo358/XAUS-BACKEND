@@ -1,7 +1,7 @@
 package com.XAUS.Services.Clients;
 
 import com.XAUS.DTOS.Clients.ClientsRequestDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Models.Clients.Clients;
 import com.XAUS.Repositories.Clients.ClientsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class ClientsService {
     public void handleNotFoundClients(Clients client){
 
         if(client == null){
-            throw new CustomException("Cliente não encontrado", HttpStatus.NOT_FOUND);
+            throw new XausException("Cliente não encontrado", HttpStatus.NOT_FOUND);
         }
     }
 
     public void validateCpf(String cpf){
         if(!cpf.matches("[0-9]{3}\\.?[0-9]{3}\\.?[0-9]{3}\\-?[0-9]{2}")){
-            throw new CustomException("CPF inválido!", HttpStatus.NOT_ACCEPTABLE);
+            throw new XausException("CPF inválido!", HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
@@ -41,7 +41,7 @@ public class ClientsService {
         boolean valid = EmailValidator.getInstance().isValid(email);
 
         if(!valid){
-            throw new CustomException("Email inválido!", HttpStatus.NOT_ACCEPTABLE);
+            throw new XausException("Email inválido!", HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
@@ -55,13 +55,13 @@ public class ClientsService {
         Clients alreadyAddedEmail = repository.findbyEmail(email);
 
         if(cpf == null || email == null){
-            throw new CustomException("O email ou o cpf não pode ser null", HttpStatus.BAD_REQUEST);
+            throw new XausException("O email ou o cpf não pode ser null", HttpStatus.BAD_REQUEST);
         }
         else if(alreadyAddedCPF != null  ){
-            throw new CustomException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
+            throw new XausException("CPF já cadastrado", HttpStatus.BAD_REQUEST);
         }
         else if(alreadyAddedEmail != null){
-            throw new CustomException("Email já cadastrado", HttpStatus.BAD_REQUEST);
+            throw new XausException("Email já cadastrado", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -106,14 +106,14 @@ public class ClientsService {
         return client;
     }
 
-    public ResponseEntity updateClient (Long id, @RequestBody ClientsRequestDTO newData){
+    public void  updateClient (Long id, @RequestBody ClientsRequestDTO newData){
 
         if( newData.email() == null || newData.name() == null){
-            throw new CustomException("O email ou o nome não pode ser vázio", HttpStatus.BAD_GATEWAY);
+            throw new XausException("O email ou o nome não pode ser vázio", HttpStatus.BAD_GATEWAY);
         }
 
         if(id == 1){
-            throw new CustomException("Esse cliente não pode ser alterado", HttpStatus.BAD_GATEWAY);
+            throw new XausException("Esse cliente não pode ser alterado", HttpStatus.BAD_GATEWAY);
         }
 
         Clients client = this.findById(id);
@@ -121,7 +121,6 @@ public class ClientsService {
         client.setEmail(newData.email());
         client.setName(newData.name());
         repository.save(client);
-        return ResponseEntity.ok().build();
     }
 
     public List<Clients> getAll(){
@@ -132,7 +131,7 @@ public class ClientsService {
     public ResponseEntity deleteClient(Long id){
 
         if(id == 1){
-            throw new CustomException("Esse cliente não pode ser deletado", HttpStatus.BAD_GATEWAY);
+            throw new XausException("Esse cliente não pode ser deletado", HttpStatus.BAD_GATEWAY);
         }
 
         //Just checking if isn't null

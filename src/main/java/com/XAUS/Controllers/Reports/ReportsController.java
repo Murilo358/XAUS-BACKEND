@@ -3,6 +3,7 @@ package com.XAUS.Controllers.Reports;
 import com.XAUS.DTOS.Reports.DashboardReportDTO;
 import com.XAUS.Services.Reports.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,9 @@ public class ReportsController {
     public ReportsService reportsService;
 
     @GetMapping("/dashboard")
-    public DashboardReportDTO getDashboardreport (){
+    public ResponseEntity<DashboardReportDTO> getDashBoardReport (){
 
-        return this.reportsService.getDashboardreport();
+        return ResponseEntity.ok(reportsService.getDashboardreport());
     }
 
 }

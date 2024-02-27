@@ -4,7 +4,7 @@ import com.XAUS.DTOS.Auth.LoginRequestDTO;
 import com.XAUS.DTOS.Auth.LoginResponseDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
 import com.XAUS.DTOS.Auth.ValidateTokenDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Models.User.User;
 import com.XAUS.Services.Auth.AuthorizationService;
 import com.XAUS.Services.User.UserService;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-
 @RequestMapping("auth")
 public class AuthenticationController {
 
@@ -83,7 +82,7 @@ public class AuthenticationController {
         User user = authorizationService.validateToken(token);
 
             if(user == null){
-                throw new CustomException("Invalid token!",HttpStatus.BAD_REQUEST);
+                throw new XausException("Invalid token!",HttpStatus.BAD_REQUEST);
             }
             else{
                 List<String> userRoles = user.getAuthorities().stream().map(role -> role.getAuthority().replace("ROLE_", "")).toList();

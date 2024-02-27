@@ -2,7 +2,7 @@ package com.XAUS.Services.Orders;
 
 import com.XAUS.DTOS.Orders.OrderRequestDTO;
 import com.XAUS.DTOS.Users.UserRequestDTO;
-import com.XAUS.Exceptions.CustomException;
+import com.XAUS.Exceptions.XausException;
 import com.XAUS.Exceptions.OutOfStockException;
 import com.XAUS.Models.Clients.Clients;
 import com.XAUS.Models.Products.Product;
@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 class OrdersServiceTest {
 
@@ -94,7 +94,7 @@ class OrdersServiceTest {
         OrderRequestDTO data = new OrderRequestDTO(userId, null, createProductListWithQuantity(1L, 1), 1L);
         when(userService.findById(userId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(CustomException.class, ()-> ordersService.newOrder(data));
+        Exception exception = assertThrows(XausException.class, ()-> ordersService.newOrder(data));
 
         assertThat(exception).isNotNull();
     }
@@ -113,7 +113,7 @@ class OrdersServiceTest {
         when(userService.findById(10L)).thenReturn(Optional.of(user));
         when(productRepository.findById(10L)).thenReturn(Optional.of(product));
 
-        assertThrows(CustomException.class, () -> ordersService.newOrder(data), "Cliente não encontrado");
+        assertThrows(XausException.class, () -> ordersService.newOrder(data), "Cliente não encontrado");
 
     }
 
@@ -130,7 +130,7 @@ class OrdersServiceTest {
         when(userService.findById(10L)).thenReturn(Optional.of(user));
         when(clientsService.findByIdWithoutError(1L)).thenReturn(Optional.of(client));
 
-        assertThrows(CustomException.class, () -> ordersService.newOrder(data), "not found");
+        assertThrows(XausException.class, () -> ordersService.newOrder(data), "not found");
     }
 
 

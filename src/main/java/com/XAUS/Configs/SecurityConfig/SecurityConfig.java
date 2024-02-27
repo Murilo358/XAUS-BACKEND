@@ -1,8 +1,8 @@
 package com.XAUS.Configs.SecurityConfig;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize-> {
                                 authorize
                                         .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "POST")).authenticated()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/api-docs(.*)", "GET")).permitAll()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/swagger-ui(.*)", "GET")).permitAll()
+                                        .requestMatchers(new RegexRequestMatcher("(.*)/api-docs(.*)", "POST")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "POST")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/password(.*)", "GET")).permitAll()
                                         .requestMatchers(new RegexRequestMatcher("(.*)/ws-endpoint(.*)", "GET")).permitAll()

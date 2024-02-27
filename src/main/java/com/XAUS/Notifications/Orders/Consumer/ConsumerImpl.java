@@ -93,7 +93,7 @@ public class ConsumerImpl implements Consumer {
         try{
             if(simpUser != null){
                 if(simpUser.getSessions().iterator().next().getSubscriptions().isEmpty()){
-                    //Waits until user has subscriptions if he doesn't in 1 seconds the notifications will no be sent to him
+                    //Waits until user has subscriptions if he doesn't in 1 seconds the notifications will not be sent to him
                     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
                     Runnable runnable = new Runnable() {

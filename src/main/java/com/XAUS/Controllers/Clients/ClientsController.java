@@ -25,7 +25,7 @@ public class ClientsController {
     }
 
     @GetMapping("/bycpf/{CPF}")
-    public Clients getClientByCPF(@PathVariable("CPF") String CPF){
+    public Clients getClientByCPF(@PathVariable String CPF){
 
         return this.clientsService.findClientyByCPF(CPF);
     }
@@ -36,9 +36,9 @@ public class ClientsController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity updateClient(@PathVariable Long id, @RequestBody ClientsRequestDTO newData){
-
-        return this.clientsService.updateClient(id, newData);
+    public ResponseEntity<String> updateClient(@PathVariable Long id, @RequestBody ClientsRequestDTO newData){
+        this.clientsService.updateClient(id, newData);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getall")

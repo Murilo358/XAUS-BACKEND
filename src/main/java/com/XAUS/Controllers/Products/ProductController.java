@@ -11,46 +11,45 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//Informa que é um controller de request
 @RestController
-//Mapeia e request de product
 @RequestMapping("products")
 public class ProductController {
 
-    //AutoWired injeta as depencias(instancia automacicamente uma classe)
+
     @Autowired
     public ProductService productService;
 
 
     @GetMapping("/getAll")
-    public List<ProductResponseDTO> getAll() {
-
-        return this.productService.getAll();
+    public ResponseEntity<List<ProductResponseDTO>> getAll() {
+        return ResponseEntity.ok(this.productService.getAll());
 
     }
 
 
     @PostMapping("/create")
     public ResponseEntity<Product> saveProduct(@RequestBody ProductRequestDTO data) {
-        Product savedProduct = this.productService.saveProduct(data);
-        return ResponseEntity.ok(savedProduct);
+        return ResponseEntity.ok(this.productService.saveProduct(data));
     }
 
     @DeleteMapping("/delete/{productId}")
-    public ResponseEntity deleteProduct(@PathVariable Long productId){
+    public ResponseEntity<String> deleteProduct(@PathVariable Long productId){
+        this.productService.deleteProduct(productId);
 
-        return this.productService.deleteProduct(productId);
+        return ResponseEntity.ok().body("Product with id: " + productId + "  deleted successfully");
+
     }
 
     @PutMapping("/update/{productId}")
-    public ResponseEntity updateProduct(@PathVariable Long productId, @RequestBody ProductRequestDTO newData){
-       return this.productService.updateProduct(productId, newData);
+    public ResponseEntity<String> updateProduct(@PathVariable Long productId, @RequestBody ProductRequestDTO newData){
+       productService.updateProduct(productId, newData);
+        return ResponseEntity.ok().body("Product with id: " + productId + " updated successfully");
     }
 
     @PutMapping("/addStock/{productId}/{quantity}")
-    public ResponseEntity addStock(@PathVariable Long productId, @PathVariable Integer quantity) {
+    public  ResponseEntity<String> addStock(@PathVariable Long productId, @PathVariable Integer quantity) {
         this.productService.addStock(productId, quantity);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Stock added to product id:" + productId + " successfully");
     }
 
     @GetMapping("/{id}")

@@ -47,32 +47,32 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         try{
+            registration.interceptors(new ChannelInterceptor() {
+                @Override
+                public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                    StompHeaderAccessor accessor =
+                            MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+                    if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                        String token = Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).replace("Bearer ", ""); // Assuming the token is in the Authorization header
+                        String validatedToken = tokenService.validateToken(token);
+                        User user = userRepository.findByEmail(validatedToken);
+                        Principal principal = new Principal() {
+                            @Override
+                            public String getName() {
+                                return user.getEmail();
+                            }
 
+                        };
+
+                        accessor.setUser(principal);
+                    }
+                    return message;
+                }
+            });
         }catch(NullPointerException e){
             LogManager.logError(getClass(), "Error while getting user by token on inbound channel ", e);
         }
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String token = Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).replace("Bearer ", ""); // Assuming the token is in the Authorization header
-                    String validatedToken = tokenService.validateToken(token);
-                    User user = userRepository.findByEmail(validatedToken);
-                    Principal principal = new Principal() {
-                        @Override
-                        public String getName() {
-                            return user.getEmail();
-                        }
 
-                    };
-
-                    accessor.setUser(principal);
-                }
-                return message;
-            }
-        });
     }
 
 

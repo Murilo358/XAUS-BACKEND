@@ -19,47 +19,46 @@ public class OrdersController {
     public OrdersService ordersService;
 
     @PostMapping("/create")
-    public Orders createNewOrder(@RequestBody OrderRequestDTO data){
-
-        return ordersService.newOrder(data);
+    public ResponseEntity<Orders> createNewOrder(@RequestBody OrderRequestDTO data){
+        return ResponseEntity.ok(ordersService.newOrder(data));
 
     }
     @GetMapping("/{orderId}")
-    public  List<OrdersResponseDTO> getOrderBYId(@PathVariable Long orderId){
-        return ordersService.findById(orderId);
+    public  ResponseEntity<List<OrdersResponseDTO>> getOrderBYId(@PathVariable Long orderId){
+        return ResponseEntity.ok(ordersService.findById(orderId));
     }
 
     @GetMapping("/byuser/{userId}")
-    public List<OrdersResponseDTO> getOrdersByUserId(@PathVariable Long userId){
+    public ResponseEntity<List<OrdersResponseDTO>> getOrdersByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok( ordersService.OrdersByUserId(userId));
 
-    return ordersService.OrdersByUserId(userId);
     }
 
     @GetMapping("/byclient/{clientId}")
-    public List<OrdersResponseDTO> OrdersByClientId(@PathVariable Long clientId){
-
-        return ordersService.OrdersByClientId(clientId);
+    public ResponseEntity<List<OrdersResponseDTO>> OrdersByClientId(@PathVariable Long clientId) {
+        return ResponseEntity.ok(ordersService.OrdersByClientId(clientId));
     }
 
     @GetMapping("/getall")
-    public List<OrdersResponseDTO> getAllOrders(){
-        return ordersService.getAllOrders();
+    public ResponseEntity<List<OrdersResponseDTO>> getAllOrders(){
+        return ResponseEntity.ok(ordersService.getAllOrders());
     }
 
     @PostMapping("{orderId}/setPayed")
-    public ResponseEntity setOrderPayed(@PathVariable Long orderId){
-
-        return ordersService.setOrderPayed(orderId);
+    public ResponseEntity<String> setOrderPayed(@PathVariable Long orderId){
+        ordersService.setOrderPayed(orderId);
+        return ResponseEntity.ok("Order with id " + orderId + " set isPayed to true successfully!");
     }
 
     @GetMapping("productsReport")
-    public List<ProductsReportsReponseDTO> getProductsReport(){
-        return ordersService.getProductsReport();
+    public ResponseEntity<List<ProductsReportsReponseDTO>> getProductsReport(){
+        return ResponseEntity.ok(ordersService.getProductsReport());
     }
 
     @PostMapping("{orderId}/setPackaged")
-    public ResponseEntity setOrderItsPackaged(@PathVariable Long orderId, @RequestBody Boolean setPackaged){
-        return ordersService.setOrderPackaged(orderId, setPackaged);
+    public ResponseEntity<String> setOrderItsPackaged(@PathVariable Long orderId, @RequestBody Boolean setPackaged){
+        ordersService.setOrderPackaged(orderId, setPackaged);
+        return ResponseEntity.ok("Order with id " + orderId + " set isPackaged to " + setPackaged + " successfully!");
     }
 
 }

@@ -1,6 +1,6 @@
 package com.XAUS.Services.Email;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 public interface EmailService {
 
     public void sendSimpleMessage(String to, String subject, String text) throws MessagingException;

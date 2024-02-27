@@ -2,7 +2,7 @@ package com.XAUS.Models.Payment;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Table(name = "payment_methods")
 @Entity(name = "payment_methods")

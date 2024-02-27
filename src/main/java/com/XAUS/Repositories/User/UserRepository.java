@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
-   @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
+   @Query(value = "SELECT * FROM users WHERE email ILIKE :email", nativeQuery = true)
     public User findByEmail (@Param("email") String email);
 
     @Query(value = "SELECT * FROM users WHERE cpf = :cpf", nativeQuery = true)
