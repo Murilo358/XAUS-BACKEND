@@ -1,3 +1,4 @@
+<img src="./src/main/resources/static/images/xaus-logo.png" alt="Logo XAUS" width="115" height="115">
 <hr>
 <p align="center">
    <img src="http://img.shields.io/static/v1?label=STATUS&message=EM PROGRESSO&color=orange&style=for-the-badge" #vitrine/>
