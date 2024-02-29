@@ -35,11 +35,11 @@
 
 :white_check_mark: `Funcionalidade 5:` Migrations para manter o banco de dados versionado (FlyWay)
 
-:white_check_mark: `Funcionalidade 6:` Envio de email com token para redefinição de senha   
+:white_check_mark: `Funcionalidade 6:` Envio de email com token para redefinição de senha (Thymeleaf(HTML) e Jakarta Mail)    
 
-:white_check_mark: `Funcionalidade 7:` Notificações de novos pedidos para o Empacotador e Admin (Websockets e RabbitMq) 
+:white_check_mark: `Funcionalidade 7:` Notificações de novos pedidos para o empacotador e admin (Websockets e RabbitMq) 
 
-:white_check_mark: `Funcionalidade 8:` Criação de testes unitários para melhor mantenabilidade  (Thymeleaf(HTML) e Jakarta Mail) 
+:white_check_mark: `Funcionalidade 8:` Criação de testes unitários para melhor mantenabilidade
 
 :white_check_mark: `Funcionalidade 9:` Implementação de cache compartilhado permitindo escalabilidade entre multiplas instâncias (Docker e Redis)  
 
