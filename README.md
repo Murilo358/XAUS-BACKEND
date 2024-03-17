@@ -1,7 +1,7 @@
 <img src="./src/main/resources/static/images/xaus-logo.png" alt="Logo XAUS" width="115" height="115">
 <hr>
 <p align="center">
-   <img src="http://img.shields.io/static/v1?label=STATUS&message=EM PROGRESSO&color=orange&style=for-the-badge" #vitrine/>
+   <img src="http://img.shields.io/static/v1?label=STATUS&message=FINALIZADO&color=green&style=for-the-badge" #vitrine/>
 </p>
 <hr>
 
@@ -19,7 +19,7 @@
 ## Descrição do projeto 
 
 <p align="justify">
- O XAUS forcece um painel intuitivo baseado em admin panel para gerenciar todos os aspectos cruciais de um negócio, desde a criação de pedidos até a administração de usuários e permissões. 
+ O XAUS fornece um painel intuitivo baseado em admin panel para gerenciar todos os aspectos cruciais de um negócio, desde a criação de pedidos até a administração de usuários e permissões. 
   Ele é construído com foco na segurança, escalabilidade e facilidade de manutenção.
 </p>
 
@@ -71,6 +71,8 @@
 ![POSTGRESQL](https://img.shields.io/badge/-postgresql-0D1117?style=for-the-badge&logo=postgresql&labelColor=0D1117&logoColor=dbdbda)&nbsp;
 ![SUPABASE](https://img.shields.io/badge/-supabase-0D1117?style=for-the-badge&logo=supabase&logoColor=dbdbda&labelColor=0D1117)&nbsp;
 ![REDIS](https://img.shields.io/badge/-Redis-0D1117?style=for-the-badge&logo=redis&logoColor=dbdbda&labelColor=0D1117)&nbsp;
+![AWS](https://img.shields.io/badge/-aws-0D1117?style=for-the-badge&logo=amazon-aws&labelColor=0D1117&logoColor=dbdbda)&nbsp;
+
 
 ## Desenvolvedor
 
