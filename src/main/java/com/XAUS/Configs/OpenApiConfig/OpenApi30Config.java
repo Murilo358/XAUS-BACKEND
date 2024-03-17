@@ -18,8 +18,15 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "https://portfolio-murilo358.vercel.app/"
                 ),
                 description = """
-                        An application based on admin panel that provides you a simple interface and interactions.\s
-                        \s
+                        O XAUS oferece um painel intuitivo, conhecido como admin panel, projetado para gerenciar todos
+                         os aspectos essenciais de um negócio, desde a geração de pedidos até a administração de usuários 
+                         e permissões. Sua construção é centrada na segurança, escalabilidade e facilidade de manutenção, 
+                         garantindo uma experiência confiável e eficiente para os usuários.
+                          \s
+                         The XAUS offers an intuitive panel, known as the admin panel, designed to manage all essential aspects
+                          of a business, from order generation to user administration and permissions. Its construction is centered 
+                          around security, scalability, and ease of maintenance, ensuring a reliable and efficient experience for users.
+                         \s
                          First of all use the /auth/login route to get the JWT token and then use it to authenticate on the api docs""",
                 title = "XAUS-system",
                 version = "1.0",
