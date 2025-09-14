@@ -1,10 +1,19 @@
 FROM eclipse-temurin:17.0.8.1_1-jdk-jammy
-COPY . .
+
+WORKDIR /app
+
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
 
 RUN sed -i 's/\r$//' mvnw
 
-RUN /bin/sh mvnw dependency:resolve
+RUN ./mvnw dependency:resolve
 
-RUN /bin/sh mvnw clean install
+COPY src ./src
 
-ENTRYPOINT ["java","-jar","target/XAUS-0.0.1-SNAPSHOT.jar"]
+RUN ./mvnw clean package -DskipTests
+
+ENV PORT=8080
+EXPOSE 8080
+
+ENTRYPOINT ["sh", "-c", "java -jar target/XAUS-0.0.1-SNAPSHOT.jar --server.port=$PORT"]
