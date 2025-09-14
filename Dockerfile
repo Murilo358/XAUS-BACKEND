@@ -7,6 +7,8 @@ COPY .mvn .mvn
 
 RUN sed -i 's/\r$//' mvnw
 
+RUN chmod +x mvnw
+
 RUN ./mvnw dependency:resolve
 
 COPY src ./src
